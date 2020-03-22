@@ -7,6 +7,7 @@ jobs: # basic units of work in a run
     resource_class: small
     environment: # environment variables for the build itself
       GOPATH: /go 
+    working_directory: /go/src/github.com/gnyman/go-test-cache-experiment
     steps: # steps that comprise the `build` job
       - checkout # check out source code to working directory
 
@@ -60,24 +61,3 @@ jobs: # basic units of work in a run
           paths:
             - "/go/pkg"
             - "/home/circleci/.cache"
-
-      - run:
-          name: Start service
-          environment:
-            CONTACTS_DB_URL: "postgres://circleci-demo-go@localhost:5432/circle_test?sslmode=disable"
-            CONTACTS_DB_MIGRATIONS: /go/src/github.com/CircleCI-Public/circleci-demo-go/db/migrations
-          command: ./workdir/contacts
-          background: true # keep service running and proceed to next step
-
-      - run:
-          name: Validate service is working
-          command: |
-            sleep 5
-            curl --retry 10 --retry-delay 1 -X POST --header "Content-Type: application/json" -d '{"email":"test@example.com","name":"Test User"}' http://localhost:8080/contacts
-
-      - store_artifacts: # Upload test summary for display in Artifacts: https://circleci.com/docs/2.0/artifacts/
-          path: /tmp/test-results
-          destination: raw-test-output
-
-      - store_test_results: # Upload test results for display in Test Summary: https://circleci.com/docs/2.0/collect-test-data/
-          path: /tmp/test-results
