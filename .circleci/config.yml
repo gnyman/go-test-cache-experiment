@@ -49,7 +49,7 @@ jobs: # basic units of work in a run
       - run:
           name: Setup Environment Variables
           command: |
-            echo "export GO_VERSION=$(go version|md5)" >> $BASH_ENV
+            echo "export GO_VERSION=$(go version|md5sum)" >> $BASH_ENV
 
       - restore_cache: # restores saved cache if no changes are detected since last run
       # Read about caching dependencies: https://circleci.com/docs/2.0/caching/
