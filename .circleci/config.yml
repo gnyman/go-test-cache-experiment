@@ -58,7 +58,7 @@ jobs: # basic units of work in a run
       - restore_cache: # restores saved cache if no changes are detected since last run
       # Read about caching dependencies: https://circleci.com/docs/2.0/caching/
           keys:
-            - v1-go-cache-{{ .Environment.GO_VERSION }}
+            - v1-go-cache-{{ checksum "/usr/local/go/VERSION" }}
 
       - run:
           name: Run unit tests
@@ -66,7 +66,7 @@ jobs: # basic units of work in a run
             go test -v ./...
 
       - save_cache: # Store cache in the /go/pkg directory
-          key: v1-go-cache-{{ .Environment.GO_VERSION }}
+          key: v1-go-cache-{{ checksum "/usr/local/go/VERSION" }}
           paths:
             - "/go/pkg"
             - "/home/circleci/.cache"
